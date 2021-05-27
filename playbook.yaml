@@ -33,7 +33,7 @@
           - python3-pip
         state: present
 
-        
+
     # Docker
     - name: "Add Docker GPG apt Key"
       apt_key:
@@ -69,9 +69,28 @@
     - name: "Set strong passwords in the security section options of .env"
       command: ~/docker-jitsi-meet/gen-passwords.sh
 
+    # Set env
+    - name: Set HTTP_PORT
+      ansible.builtin.lineinfile:
+        path: ~/docker-jitsi-meet/.env
+        regexp: '^HTTP_PORT='
+        line: HTTP_PORT=80
+
+    - name: Set HTTPS_PORT
+      ansible.builtin.lineinfile:
+        path: ~/docker-jitsi-meet/.env
+        regexp: '^HTTPS_PORT='
+        line: HTTPS_PORT=443
+
+    - name: Set ENABLE_LOBBY
+      ansible.builtin.lineinfile:
+        path: ~/docker-jitsi-meet/.env
+        regexp: '^ENABLE_LOBBY='
+        line: ENABLE_LOBBY=1
+
     - name: "Create required CONFIG directories"
       ansible.builtin.file:
-        path: ~/.jitsi-meet-cfg/{web/letsencrypt,transcripts,prosody/config,prosody/prosody-plugins-custom,jicofo,jvb,jigasi,jibri}
+        path: ~/.jitsi-meet-cfg/{{ item }}
         state: directory
       loop:
         - web
