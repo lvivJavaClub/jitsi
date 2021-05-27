@@ -74,19 +74,64 @@
       ansible.builtin.lineinfile:
         path: ~/docker-jitsi-meet/.env
         regexp: '^HTTP_PORT='
+        insertafter: '^#HTTP_PORT='
         line: HTTP_PORT=80
 
     - name: Set HTTPS_PORT
       ansible.builtin.lineinfile:
         path: ~/docker-jitsi-meet/.env
         regexp: '^HTTPS_PORT='
+        insertafter: '^#HTTPS_PORT='
         line: HTTPS_PORT=443
 
     - name: Set ENABLE_LOBBY
       ansible.builtin.lineinfile:
         path: ~/docker-jitsi-meet/.env
         regexp: '^ENABLE_LOBBY='
+        insertafter: '^#ENABLE_LOBBY='
         line: ENABLE_LOBBY=1
+
+    - name: Set PUBLIC_URL
+      ansible.builtin.lineinfile:
+        path: ~/docker-jitsi-meet/.env
+        regexp: '^PUBLIC_URL='
+        insertafter: '^#PUBLIC_URL='
+        line: PUBLIC_URL=https://javaclub.lviv.ua
+
+    - name: Set ENABLE_LETSENCRYPT
+      ansible.builtin.lineinfile:
+        path: ~/docker-jitsi-meet/.env
+        regexp: '^ENABLE_LETSENCRYPT='
+        insertafter: '^#ENABLE_LETSENCRYPT='
+        line: ENABLE_LETSENCRYPT=1
+
+    - name: Set LETSENCRYPT_DOMAIN
+      ansible.builtin.lineinfile:
+        path: ~/docker-jitsi-meet/.env
+        regexp: '^LETSENCRYPT_DOMAIN='
+        insertafter: '^#LETSENCRYPT_DOMAIN='
+        line: LETSENCRYPT_DOMAIN=javaclub.lviv.ua
+
+    - name: Set LETSENCRYPT_EMAIL
+      ansible.builtin.lineinfile:
+        path: ~/docker-jitsi-meet/.env
+        regexp: '^LETSENCRYPT_EMAIL='
+        insertafter: '^#LETSENCRYPT_EMAIL='
+        line: LETSENCRYPT_EMAIL=banadiga@gmail.com
+
+    - name: Set ETHERPAD_TITLE
+      ansible.builtin.lineinfile:
+        path: ~/docker-jitsi-meet/.env
+        regexp: '^ETHERPAD_TITLE='
+        insertafter: '^#ETHERPAD_TITLE='
+        line: ETHERPAD_TITLE=Lviv JavaClub
+    
+    - name: Set ETHERPAD_DEFAULT_PAD_TEXT
+      ansible.builtin.lineinfile:
+        path: ~/docker-jitsi-meet/.env
+        regexp: '^ETHERPAD_DEFAULT_PAD_TEXT='
+        insertafter: '^#ETHERPAD_DEFAULT_PAD_TEXT='
+        line: ETHERPAD_DEFAULT_PAD_TEXT=Welcome to Lviv JavaClub
 
     - name: "Create required CONFIG directories"
       ansible.builtin.file:
