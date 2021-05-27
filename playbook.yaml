@@ -2,8 +2,97 @@
 - hosts: all
   become: yes
   tasks:
-    - name: Update apt repo and cache on all Debian/Ubuntu boxes
+    # Init
+    - name: "Update apt repo and cache on all Debian/Ubuntu boxes"
       apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
 
-    - name: Upgrade all packages on servers
+    - name: "Upgrade all packages on servers"
       apt: upgrade=dist force_apt_get=yes
+
+
+    # DigitalOcean
+    - name: "Add the DigitalOcean key to apt"
+      apt_key:
+        url: "https://repos.insights.digitalocean.com/sonar-agent.asc"
+        state: present
+
+    - name: "Install the DigitalOcean Metrics Agent"
+      apt:
+        name: do-agent
+        state: present
+
+
+    # Docker
+    - name: "Add Docker GPG apt Key"
+      apt_key:
+        url: "https://download.docker.com/linux/ubuntu/gpg"
+        state: present
+
+    - name: "Add Docker Repository"
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: "Update apt and install docker-ce"
+      apt: update_cache=yes name=docker-ce state=latest
+      
+    - name: "Install python docker / docker-compse module"
+      pip:
+        name:
+            - docker-compose
+
+    # Other software
+    - name: "Install required packages"
+      apt:
+        pkg:
+          - git
+          - curl
+          - tree
+        state: present
+
+    # jitsi
+    - name: "Download and extract the latest jitsi release"
+      ansible.builtin.git:
+        repo: "https://github.com/jitsi/docker-jitsi-meet.git"
+        force: true
+        version: stable-5870
+        dest: "~/docker-jitsi-meet"
+
+    - name: "Create a .env file by copying and adjusting env.example"
+      ansible.builtin.copy:
+        src: ~/docker-jitsi-meet/env.example
+        dest: ~/docker-jitsi-meet/.env
+
+    - name: "Set strong passwords in the security section options of .env"
+      ansible.builtin.shell: ~/docker-jitsi-meet/gen-passwords.sh
+
+    - name: "Create required CONFIG directories"
+      ansible.builtin.file:
+        path: ~/.jitsi-meet-cfg/{web/letsencrypt,transcripts,prosody/config,prosody/prosody-plugins-custom,jicofo,jvb,jigasi,jibri}
+        state: directory
+      loop:
+        - web
+        - web/letsencrypt
+        - transcripts
+        - prosody
+        - prosody/config
+        - prosody/prosody-plugins-custom
+        - jicofo
+        - jvb
+        - jigasi
+        - jibri
+
+    # - name: "Update jitsi config"
+    - name: "Tear down existing jitsi services"
+      community.docker.docker_compose:
+        project_src: "~/docker-jitsi-meet"
+        state: absent
+
+    - name: "Run `docker-compose up` again"
+      community.docker.docker_compose:
+        project_src: "~/docker-jitsi-meet"
+        build: no
+
+    - name: "Remove dependencies that are no longer required"
+      apt:
+        autoremove: yes
