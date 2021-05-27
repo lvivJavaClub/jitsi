@@ -22,6 +22,18 @@
         state: present
 
 
+    # Other software
+    - name: "Install required packages"
+      apt:
+        pkg:
+          - git
+          - curl
+          - tree
+          - python3
+          - python3-pip
+        state: present
+
+        
     # Docker
     - name: "Add Docker GPG apt Key"
       apt_key:
@@ -40,17 +52,6 @@
       pip:
         name:
             - docker-compose
-
-    # Other software
-    - name: "Install required packages"
-      apt:
-        pkg:
-          - git
-          - curl
-          - tree
-          - python3
-          - python3-pip
-        state: present
 
     # jitsi
     - name: "Download and extract the latest jitsi release"
