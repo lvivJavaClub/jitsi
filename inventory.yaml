@@ -1,0 +1,7 @@
+---
+all:
+  children:
+    jitsiserver:
+      hosts:
+        localhost:
+          ansible_connection: local
