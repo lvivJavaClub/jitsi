@@ -11,7 +11,7 @@
 
 ```bash
 
-cd ${HOME}/jitsi-playbook && git feach && git pull
+cd ${HOME}/jitsi-playbook && git fetch && git pull
 
 ```
 
