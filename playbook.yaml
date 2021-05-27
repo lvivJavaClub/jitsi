@@ -64,7 +64,7 @@
         dest: ~/docker-jitsi-meet/.env
 
     - name: "Set strong passwords in the security section options of .env"
-      ansible.builtin.shell: ~/docker-jitsi-meet/gen-passwords.sh
+      command: ~/docker-jitsi-meet/gen-passwords.sh
 
     - name: "Create required CONFIG directories"
       ansible.builtin.file:
