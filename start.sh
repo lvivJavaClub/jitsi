@@ -11,4 +11,5 @@ sudo apt install ansible --yes
 
 cd ${HOME}/jitsi-playbook && git fetch && git pull
 
+cd ${HOME}/jitsi-playbook && ansible-galaxy install --role-file requirements.yml
 cd ${HOME}/jitsi-playbook && ansible-playbook --inventory inventory.yaml playbook.yaml
